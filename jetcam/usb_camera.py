@@ -16,11 +16,11 @@ class USBCamera(Camera):
         super(USBCamera, self).__init__(*args, **kwargs)
         self.cap = None
         self._init_video_capture(self.capture_api_pref)
-        atexit.register(self._release_camera)
+        atexit.register(self.release_camera)
 
     def _init_video_capture(self, api_pref):
         try:
-            self._release_camera()
+            self.release_camera()
             self.cap = self._video_capture(api_pref)
             re, image = self.cap.read()
             if not re:
@@ -28,7 +28,7 @@ class USBCamera(Camera):
         except RuntimeError:
             raise RuntimeError('Could not initialize camera.')
 
-    def _release_camera(self):
+    def release_camera(self):
         if self.cap is not None:
             try:
                 self.cap.release()
